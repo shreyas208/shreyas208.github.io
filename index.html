@@ -1,82 +1,121 @@
-<!DOCTYPE HTML>
-<!--
-	Phantom by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121834570-1"></script>
-		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
 
-		  gtag('config', 'UA-121834570-1');
-		</script>
-		<title>Shreyas Patil</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-		<link rel="icon" type="image/png" href="images/logo.png">
-	</head>
-	<body class="is-preload">
-		<!-- Wrapper -->
-			<div id="wrapper">
+    #customControls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
 
-				<!-- Header -->
-					<header id="header">
-						<div class="inner">
-							<!-- Logo -->
-								<a href="index.html" class="logo">
-									<span class="symbol"><img src="images/logo.png" alt="" /></span><span class="title">Shreyas</span>
-								</a>
-						</div>
-					</header>
+    #customControls > div > button {
+      background-color: #222;
+      border-radius: 4px;
+      border-style: none;
+      box-sizing: border-box;
+      color: #fff;
+      outline: none;
+      padding: 5px 8px;
+    }
+  </style>
 
-				<!-- Main -->
-					<div id="main">
-						<div class="inner">
-							<header>
-								<h1>Hello!<br /></h1>
-								<p>I'm Shreyas. I work as a Software Engineer and Technical Lead at Asana, where I mostly work on relational and object datastores and their interactions with our webapp, mobile, and API platforms.</p><br>
-							</header>
-						</div>
-					</div>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://esm.sh/three",
+        "three/": "https://esm.sh/three/"
+      }
+    }
+  </script>
 
-				<!-- Footer -->
-					<footer id="footer">
-						<div class="inner">
-							<section>
-								<h2>Contact</h2>
-								<ul class="alt">
-										<li><a href="mailto:s@shreyas208.com" class="icon style2 fa-envelope-o" style="margin-right: 1em;"></a><strong>s@shreyas208.com</strong></li>
-									</ul>
-							</section>
-							<section>
-								<h2>Follow</h2>
-								<ul class="icons">
-									<li><a href="https://www.github.com/shreyas208" target="_blank" class="icon style2 fa-github"><span class="label">GitHub</span></a></li>
-									<li><a href="https://www.linkedin.com/in/shreyas208" target="_blank" class="icon style2 fa-linkedin"><span class="label">LinkedIn</span></a></li>
-									<li><a href="https://500px.com/shreyas208" target="_blank" class="icon style2 fa-500px"><span class="label">500px</span></a></li>
-								</ul>
-							</section>
-							<ul class="copyright">
-								<li>Design: <a href="http://html5up.net" target="_blank">HTML5 UP</a></li>
-							</ul>
-						</div>
-					</footer>
+  <!--  <script type="module"> import * as THREE from 'three'; window.THREE = THREE;</script>-->
+  <!--  <script src="../../dist/three-globe.js" defer></script>-->
+</head>
 
-			</div>
+<body>
+  <div id="globeViz"></div>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+  <div id="customControls">
+    <div id="cc_bg">
+      <button id="bg_blueMarble">Blue Marble</button>
+      <button id="bg_night">Night</button>
+    </div>
+  </div>
 
-	</body>
-</html>
+  <script type="module">
+    import ThreeGlobe from "https://esm.sh/three-globe?external=three";
+    import * as THREE from "https://esm.sh/three";
+    import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js?external=three";
+
+    fetch("assets/countries-180.geojson")
+      .then((res) => res.json())
+      .then((countries) => {
+        fetch("assets/populated_places-180.geojson")
+          .then((res) => res.json())
+          .then((labels) => {
+            const Globe = new ThreeGlobe()
+              .bumpImageUrl("assets/earth-topology-180.png")
+              .polygonsData(
+                countries.features.filter((d) => d.properties.ISO_A2 !== "AQ")
+              )
+              .polygonCapColor(() => "rgba(0, 0, 0, 0)")
+              .polygonStrokeColor(() => "#cccccc")
+              .polygonSideColor(() => "#cccccc")
+              .polygonAltitude(() => 0.005)
+              .labelsData(labels.features)
+              .labelLat((d) => d.properties.latitude)
+              .labelLng((d) => d.properties.longitude)
+              .labelText((d) => d.properties.nameascii)
+              .labelSize((d) => 0.7)
+              .labelAltitude((d) => 0.007)
+              .labelDotRadius((d) => 0.5)
+              .labelColor((d) => d.properties.color || "#cccccc")
+              .labelResolution(2);
+
+            // Setup renderer
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document
+              .getElementById("globeViz")
+              .appendChild(renderer.domElement);
+
+            // Setup scene
+            const scene = new THREE.Scene();
+            scene.add(Globe);
+            scene.add(new THREE.AmbientLight(0xcccccc, Math.PI));
+            scene.add(new THREE.DirectionalLight(0xffffff, 0.6 * Math.PI));
+
+            // Setup camera
+            const camera = new THREE.PerspectiveCamera();
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            camera.position.z = 300;
+
+            // Add camera controls
+            const tbControls = new OrbitControls(camera, renderer.domElement);
+            tbControls.minDistance = 101;
+            tbControls.rotateSpeed = 2;
+            tbControls.zoomSpeed = 0.8;
+
+            document.getElementById("bg_blueMarble").onclick = () => {
+              Globe.globeImageUrl("assets/earth-blue-marble-180.jpg")
+            };
+            document.getElementById("bg_night").onclick = () => {
+              Globe.globeImageUrl("assets/earth-night-180.jpg")
+            };
+
+            // Kick-off renderer
+            (function animate() {
+              // IIFE
+              // Frame cycle
+              tbControls.update();
+              renderer.render(scene, camera);
+              requestAnimationFrame(animate);
+            })();
+          });
+      });
+  </script>
+</body>
