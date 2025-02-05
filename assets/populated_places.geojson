@@ -11284,6 +11284,62 @@
             "properties": {
                 "scalerank": 1,
                 "natscale": 300,
+                "labelrank": 1,
+                "featurecla": "Admin-1 capital",
+                "name": "Chennai",
+                "namepar": null,
+                "namealt": "Chennai",
+                "diffascii": 0,
+                "nameascii": "Chennai",
+                "adm0cap": 0,
+                "capalt": null,
+                "capin": null,
+                "worldcity": 0,
+                "megacity": 1,
+                "sov0name": "India",
+                "sov_a3": "IND",
+                "adm0name": "India",
+                "adm0_a3": "IND",
+                "adm1name": "Tamil Nadu",
+                "iso_a2": "IN",
+                "note": null,
+                "latitude": 13.067439,
+                "longitude": 80.237617,
+                "changed": 3,
+                "namediff": 1,
+                "diffnote": "Name changed. Changed scale rank.",
+                "pop_max": 6787000,
+                "pop_min": 5104047,
+                "pop_other": 8102712,
+                "rank_max": 13,
+                "rank_min": 13,
+                "geonameid": 1264527,
+                "meganame": "Chennai",
+                "ls_name": "Chennai",
+                "ls_match": 1,
+                "checkme": 0,
+                "min_zoom": 3.7,
+                "color": "#B95CF4"
+            },
+            "bbox": [
+                80.237617,
+                13.067439,
+                80.237617,
+                13.067439
+            ],
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    80.237617,
+                    13.067439
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "scalerank": 1,
+                "natscale": 300,
                 "labelrank": 6,
                 "featurecla": "Admin-0 capital",
                 "name": "Athens",

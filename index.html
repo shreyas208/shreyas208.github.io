@@ -56,6 +56,7 @@
           .then((res) => res.json())
           .then((labels) => {
             const Globe = new ThreeGlobe()
+              .globeImageUrl("assets/earth-night-180.jpg")
               .bumpImageUrl("assets/earth-topology-180.png")
               .polygonsData(
                 countries.features.filter((d) => d.properties.ISO_A2 !== "AQ")
@@ -68,7 +69,7 @@
               .labelLat((d) => d.properties.latitude)
               .labelLng((d) => d.properties.longitude)
               .labelText((d) => d.properties.nameascii)
-              .labelSize((d) => 0.7)
+              .labelSize((d) => d.properties.color && 0.8 || 0.6)
               .labelAltitude((d) => 0.007)
               .labelDotRadius((d) => 0.5)
               .labelColor((d) => d.properties.color || "#cccccc")
@@ -92,13 +93,17 @@
             const camera = new THREE.PerspectiveCamera();
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
-            camera.position.z = 300;
+            camera.position.x = 181.7014144528157;
+            camera.position.y = -132.0868187378144;
+            camera.position.z = -27.318355242986783;
+
 
             // Add camera controls
             const tbControls = new OrbitControls(camera, renderer.domElement);
             tbControls.minDistance = 101;
             tbControls.rotateSpeed = 2;
             tbControls.zoomSpeed = 0.8;
+            
 
             document.getElementById("bg_blueMarble").onclick = () => {
               Globe.globeImageUrl("assets/earth-blue-marble-180.jpg")
